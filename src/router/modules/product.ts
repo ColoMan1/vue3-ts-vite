@@ -11,7 +11,7 @@ const routes: RouteRecordRaw =
     children: [
       {
         path: 'attr',
-        name: 'attr',
+        name: 'product_attr',
         meta: {
           title: '商品规格'
         },
@@ -19,7 +19,7 @@ const routes: RouteRecordRaw =
       },
       {
         path: 'classify',
-        name: 'classify',
+        name: 'product_classify',
         meta: {
           title: '商品分类'
         },
@@ -27,7 +27,7 @@ const routes: RouteRecordRaw =
       },
       {
         path: 'list',
-        name: 'list',
+        name: 'product_list',
         meta: {
           title: '商品列表'
         },
@@ -35,7 +35,7 @@ const routes: RouteRecordRaw =
       },
       {
         path: 'reply',
-        name: 'reply',
+        name: 'product_reply',
         meta: {
           title: '商品评论'
         },

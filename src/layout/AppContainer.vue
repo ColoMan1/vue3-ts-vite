@@ -35,7 +35,7 @@
                 @mouseover="mouseOver"
                 @mouseleave="mouseLeave"
               >
-                <span>admin</span>
+                <span>{{ $store.state.user?.account }}</span>
                 <el-icon><ArrowDown /></el-icon>
               </div>
             </div>

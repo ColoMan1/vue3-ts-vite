@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios, { type AxiosRequestConfig } from 'axios'
+import { ElMessage } from 'element-plus'
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_API_BASEURL
@@ -20,6 +21,14 @@ request.interceptors.request.use(
 request.interceptors.response.use(
   response => {
     // 统一处理响应错误，例如 token 无效、服务端异常等
+    if (response.data.status && response.data.status !== 200) {
+      ElMessage({
+        type: 'error',
+        message: response.data.msg,
+        duration: 5 * 1000
+      })
+      return Promise.reject(response.data)
+    }
     return response
   },
   async err => {

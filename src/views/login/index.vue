@@ -72,6 +72,8 @@
 import { onMounted, reactive, ref } from 'vue'
 import { loadCaptcha, Login } from '@/api/common'
 import type { FormInstance, FormRules } from 'element-plus'
+import router from '../../router/index'
+import { store } from '../../store/index'
 const user = reactive({
   account: 'admin',
   pwd: '123456',
@@ -90,17 +92,24 @@ const rules = reactive<FormRules>({
   ]
 })
 // 登录
-const form = ref<FormInstance>()
+const form = ref<FormInstance>() // 同步元素ref拿到实列
 const handleSubmit = async () => {
+  // 表单校验
   const vali = await form.value?.validate()
-
-  if (vali) {
-    loading.value = true
-  } else {
-    loading.value = false
+  if (!vali) {
+    return false
   }
-  const data = await Login(user)
+  loading.value = true
+  // 请求登录接口
+  const data = await Login(user).finally(() => {
+    loading.value = false
+  })
   console.log(data)
+  // 存用户信息
+  store.commit('setUser', data.user_info)
+  router.replace({
+    name: 'home'
+  })
 }
 // 验证码更新
 const captcha = ref('')
