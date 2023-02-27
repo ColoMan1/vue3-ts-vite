@@ -31,13 +31,21 @@
                 <FullScreen />
               </el-icon>
               <el-icon><Bell /></el-icon>
-              <div
-                @mouseover="mouseOver"
-                @mouseleave="mouseLeave"
-              >
-                <span>{{ $store.state.user?.account }}</span>
-                <el-icon><ArrowDown /></el-icon>
-              </div>
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  {{ $store.state.user?.account }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item>
+                      个人中心
+                    </el-dropdown-item>
+                    <el-dropdown-item @click="handleLoginOut">
+                      退出登录
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </div>
           </div>
         </el-header>
@@ -53,6 +61,9 @@
 import AppMenu from './components/AppMenu.vue'
 import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { LoginOut } from '../api/common'
+import { store } from '../store/index'
 // 面包屑导航
 const router = useRouter()
 const breadcrumb = computed(() => {
@@ -71,11 +82,30 @@ const toggleFullScreen = () => {
   }
 }
 // admin鼠标移入移出
-const mouseOver = () => {
-  console.log('移入')
-}
-const mouseLeave = () => {
-  console.log('移出')
+const handleLoginOut = () => {
+  ElMessageBox.confirm(
+    '确定退出登录?',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(async () => {
+    await LoginOut()
+    ElMessage({
+      type: 'success',
+      message: '退出成功'
+    })
+    store.commit('setUser', null)
+    router.push({
+      path: '/login'
+    })
+  })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消退出'
+      })
+    })
 }
 </script>
 
@@ -113,6 +143,7 @@ const mouseLeave = () => {
       justify-content: space-between;
       .el-icon{
         vertical-align: middle;
+        margin-left: 5px;
       }
       .el-input{
         width: 218px;

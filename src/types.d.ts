@@ -12,7 +12,8 @@ declare module '@vue/runtime-core' {
 // 为router中meta属性提供类型声明
 declare module 'vue-router' {
   interface RouteMeta {
-    title: string
+    title?: string,
+    requiresAuth?: boolean
   }
 }
 // 为element提供类型声明

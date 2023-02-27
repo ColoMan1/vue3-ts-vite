@@ -5,7 +5,7 @@ import { setLocalStorage, getLocalStorage } from '@/utils/storage'
 const state = {
   count: 324242,
   isCollapse: false,
-  user: getLocalStorage<IUserInfo>('user')
+  user: getLocalStorage<{ token: string } & IUserInfo>('user')
 }
 export type State = typeof state
 

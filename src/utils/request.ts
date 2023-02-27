@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import axios, { type AxiosRequestConfig } from 'axios'
 import { ElMessage } from 'element-plus'
+import { store } from '../store/index'
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_API_BASEURL
@@ -10,6 +11,10 @@ const request = axios.create({
 request.interceptors.request.use(
   config => {
     // 统一设置用户身份 Token
+    const user = store.state.user
+    if (user && user.token) {
+      config.headers.Authorization = `Bearer ${user.token}`
+    }
     return config
   },
   async error => {

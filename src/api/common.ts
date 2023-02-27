@@ -43,3 +43,9 @@ export const Login = (data: {
     data
   })
 }
+export const LoginOut = () => {
+  return request({
+    method: 'get',
+    url: '/setting/admin/logout'
+  })
+}

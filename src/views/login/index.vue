@@ -72,14 +72,19 @@
 import { onMounted, reactive, ref } from 'vue'
 import { loadCaptcha, Login } from '@/api/common'
 import type { FormInstance, FormRules } from 'element-plus'
-import router from '../../router/index'
-import { store } from '../../store/index'
+import router from '@/router/index'
+import { store } from '@/store/index'
+import { useRoute } from 'vue-router'
+
 const user = reactive({
   account: 'admin',
   pwd: '123456',
   imgcode: ''
 })
+
 const loading = ref(false)
+const route = useRoute()
+
 const rules = reactive<FormRules>({
   account: [
     { required: true, message: '请输入账号', trigger: 'change' }
@@ -106,9 +111,16 @@ const handleSubmit = async () => {
   })
   console.log(data)
   // 存用户信息
-  store.commit('setUser', data.user_info)
+  store.commit('setUser', {
+    ...data.user_info,
+    token: data.token
+  })
+  let redirect = route.query.redirect || '/'
+  if (typeof redirect !== 'string') {
+    redirect = '/'
+  }
   router.replace({
-    name: 'home'
+    path: redirect
   })
 }
 // 验证码更新
