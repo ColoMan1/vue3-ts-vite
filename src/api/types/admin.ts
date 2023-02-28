@@ -23,3 +23,12 @@ export interface Admin {
     _add_time: string
     _last_time: string
 }
+
+export interface ICreateAdmin {
+    account: string
+    conf_pwd : string
+    pwd: string
+    roles: string
+    status:number
+    real_name: string
+}
