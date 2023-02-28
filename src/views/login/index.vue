@@ -110,6 +110,7 @@ const handleSubmit = async () => {
     loading.value = false
   })
   console.log(data)
+
   // 存用户信息
   store.commit('setUser', {
     ...data.user_info,
