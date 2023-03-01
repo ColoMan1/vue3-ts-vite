@@ -132,6 +132,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+        v-model:current-page="listParams.page"
+        v-model:page-size="listParams.limit"
+        :page-sizes="[2, 3]"
+        :background="true"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="listCount"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </card>
   </PageContainer>
 </template>
@@ -142,6 +152,7 @@ import { IListParmas } from '@/api/types/admin'
 import { Admin } from '../../../api/types/admin'
 
 const list = ref<Admin[]>([]) // 列表数据
+const listCount = ref(0) // 总数量
 const listLoading = ref(true)
 const listParams = reactive({ // 列表数据查询参数
   page: 1, // 当前页码
@@ -154,11 +165,19 @@ const responseList = async () => {
   const data = await getAdmins(listParams)
   list.value = data.list
   listLoading.value = false
+  listCount.value = data.count
 }
 onMounted(() => {
   responseList()
 })
 const handleQuery = () => {
+  responseList()
+}
+const handleSizeChange = () => {
+  listParams.page = 1
+  responseList()
+}
+const handleCurrentChange = () => {
   responseList()
 }
 </script>
