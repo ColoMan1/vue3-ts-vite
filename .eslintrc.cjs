@@ -11,7 +11,8 @@ module.exports = {
   },
   extends: [
     'plugin:vue/vue3-strongly-recommended',
-    'standard'
+    'standard',
+    'vue-global-api'
   ],
   overrides: [
     {

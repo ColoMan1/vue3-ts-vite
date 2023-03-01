@@ -1,6 +1,6 @@
 <template>
-  <page-container>
-    <app-card>
+  <PageContainer>
+    <card>
       <template #header>
         数据筛选
       </template>
@@ -9,6 +9,7 @@
         ref="form"
         :model="listParams"
         :disabled="listLoading"
+        @submit.prevent="handleQuery"
       >
         <el-form-item label="状态">
           <el-select
@@ -43,8 +44,8 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </app-card>
-    <app-card>
+    </card>
+    <card>
       <template #header>
         <el-button
           type="primary"
@@ -115,7 +116,7 @@
         >
           <template>
             <el-button
-              type="text"
+              type="primary"
             >
               编辑
             </el-button>
@@ -123,7 +124,7 @@
               title="确认删除吗？"
             >
               <template #reference>
-                <el-button type="text">
+                <el-button type="primary">
                   删除
                 </el-button>
               </template>
@@ -131,22 +132,35 @@
           </template>
         </el-table-column>
       </el-table>
-    </app-card>
-  </page-container>
+    </card>
+  </PageContainer>
 </template>
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { getAdmins } from '@/api/admin'
+import { IListParmas } from '@/api/types/admin'
+import { Admin } from '../../../api/types/admin'
 
-const list = ref([]) // 列表数据
+const list = ref<Admin[]>([]) // 列表数据
 const listLoading = ref(true)
 const listParams = reactive({ // 列表数据查询参数
   page: 1, // 当前页码
   limit: 10, // 每页大小
   name: '',
   roles: '',
-  status: ''
+  status: '' as IListParmas['status']
 })
+const responseList = async () => {
+  const data = await getAdmins(listParams)
+  list.value = data.list
+  listLoading.value = false
+}
+onMounted(() => {
+  responseList()
+})
+const handleQuery = () => {
+  responseList()
+}
 </script>
 
 <style scoped>
