@@ -132,15 +132,12 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-pagination
-        v-model:current-page="listParams.page"
-        v-model:page-size="listParams.limit"
-        :page-sizes="[2, 3]"
-        :background="true"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="listCount"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+      <Pagination
+        v-model:page="listParams.page"
+        v-model:limit="listParams.limit"
+        :list-count="listCount"
+        :response-list="responseList"
+        @change="change1"
       />
     </card>
   </PageContainer>
@@ -167,19 +164,16 @@ const responseList = async () => {
   listLoading.value = false
   listCount.value = data.count
 }
+const change1 = (val: string) => {
+  console.log(val)
+}
 onMounted(() => {
   responseList()
 })
 const handleQuery = () => {
   responseList()
 }
-const handleSizeChange = () => {
-  listParams.page = 1
-  responseList()
-}
-const handleCurrentChange = () => {
-  responseList()
-}
+
 </script>
 
 <style scoped>
