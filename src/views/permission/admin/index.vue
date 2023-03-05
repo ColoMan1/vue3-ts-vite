@@ -105,6 +105,7 @@
               :active-value="1"
               :inactive-value="0"
               :loading="scope.row.statusLoading"
+              @change="handleStatus(scope.row)"
             />
           </template>
         </el-table-column>
@@ -114,17 +115,18 @@
           min-width="100"
           align="center"
         >
-          <template>
+          <template #default="scope">
             <el-button
-              type="primary"
+              type="text"
             >
               编辑
             </el-button>
             <el-popconfirm
               title="确认删除吗？"
+              @confirm="handleDelete(scope.row.id)"
             >
               <template #reference>
-                <el-button type="primary">
+                <el-button type="text">
                   删除
                 </el-button>
               </template>
@@ -145,8 +147,9 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { getAdmins } from '@/api/admin'
-import { IListParmas } from '@/api/types/admin'
-import { Admin } from '../../../api/types/admin'
+import { IListParmas, Admin } from '@/api/types/admin'
+import { deleteAdmin, updateAdminStatus } from '../../../api/admin'
+import { ElMessage } from 'element-plus'
 
 const list = ref<Admin[]>([]) // 列表数据
 const listCount = ref(0) // 总数量
@@ -159,6 +162,7 @@ const listParams = reactive({ // 列表数据查询参数
   status: '' as IListParmas['status']
 })
 const responseList = async () => {
+  listLoading.value = true
   const data = await getAdmins(listParams)
   list.value = data.list
   listLoading.value = false
@@ -173,7 +177,20 @@ onMounted(() => {
 const handleQuery = () => {
   responseList()
 }
-
+// 删除管理员
+const handleDelete = async (id: number) => {
+  await deleteAdmin(id)
+  responseList()
+  ElMessage.success('删除成功')
+}
+// 修改状态
+const handleStatus = async (item: Admin) => {
+  item.statusLoading = true
+  await updateAdminStatus(item.id, item.status).finally(() => {
+    item.statusLoading = false
+  })
+  ElMessage.success(`${item.status === 0 ? '禁用' : '启用'}成功`)
+}
 </script>
 
 <style scoped>
