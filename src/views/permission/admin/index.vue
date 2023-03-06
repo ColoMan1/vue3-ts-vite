@@ -145,7 +145,7 @@
       />
     </card>
   </PageContainer>
-  <AdminDialog
+  <admin-dialog
     v-model="formVisible"
     v-model:admin-id="adminId"
   />
@@ -156,6 +156,7 @@ import { getAdmins } from '@/api/admin'
 import { IListParmas, Admin } from '@/api/types/admin'
 import { deleteAdmin, updateAdminStatus } from '../../../api/admin'
 import { ElMessage } from 'element-plus'
+import adminDialog from './dialogForm.vue'
 
 const list = ref<Admin[]>([]) // 列表数据
 const listCount = ref(0) // 总数量
