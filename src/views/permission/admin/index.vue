@@ -49,6 +49,7 @@
       <template #header>
         <el-button
           type="primary"
+          @click="formVisible = true"
         >
           添加管理员
         </el-button>
@@ -118,6 +119,7 @@
           <template #default="scope">
             <el-button
               type="text"
+              @click="adminEdit(scope.row.id)"
             >
               编辑
             </el-button>
@@ -143,6 +145,10 @@
       />
     </card>
   </PageContainer>
+  <AdminDialog
+    v-model="formVisible"
+    v-model:admin-id="adminId"
+  />
 </template>
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
@@ -154,6 +160,8 @@ import { ElMessage } from 'element-plus'
 const list = ref<Admin[]>([]) // 列表数据
 const listCount = ref(0) // 总数量
 const listLoading = ref(true)
+const adminId = ref<number | null>(null)
+const formVisible = ref(false)
 const listParams = reactive({ // 列表数据查询参数
   page: 1, // 当前页码
   limit: 10, // 每页大小
@@ -190,6 +198,11 @@ const handleStatus = async (item: Admin) => {
     item.statusLoading = false
   })
   ElMessage.success(`${item.status === 0 ? '禁用' : '启用'}成功`)
+}
+// 编辑
+const adminEdit = (id: number) => {
+  adminId.value = id
+  formVisible.value = true
 }
 </script>
 
