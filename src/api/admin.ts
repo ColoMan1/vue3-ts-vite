@@ -1,5 +1,5 @@
 import request from '../utils/request'
-import { Admin, IListParmas, ICreateAdmin } from './types/admin'
+import { Admin, IListParmas, ICreateAdmin, IFormData } from './types/admin'
 
 // 管理员列表
 export const getAdmins = (params: IListParmas) => {
@@ -43,5 +43,18 @@ export const updateAdminStatus = (id: number, status: number) => {
   return request({
     method: 'PUT',
     url: `/setting/set_status/${id}/${status}`
+  })
+}
+// 过去管理员身份数据
+export const getAdminIdentity = () => {
+  return request<IFormData>({
+    method: 'GET',
+    url: '/setting/admin/create'
+  }).then(res => {
+    const data = res.rules.find(item => item.field === 'roles')
+    if (data && data.options?.length) {
+      return data?.options
+    }
+    return []
   })
 }
