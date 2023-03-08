@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang='ts'>
-import { IFormData, ISelectOptions } from '@/api/types/admin'
+import { ICreateAdmin, ISelectOptions } from '@/api/types/admin'
 import { PropType } from 'vue'
 import { getAdminIdentity, getEditAdminData } from '../../../api/admin'
 import { ElForm } from 'element-plus'
@@ -102,7 +102,7 @@ const formLoading = ref(false)
 // 初始化表单数据
 let roles = reactive<ISelectOptions[]>([])
 
-let formData = reactive<IFormData>({
+const formData = ref<ICreateAdmin>({
   account: '',
   pwd: '',
   conf_pwd: '',
@@ -128,16 +128,16 @@ const formRules = {
   ]
 }
 // dialog打开
-const handleOpen = () => {
+const handleOpen = async () => {
   formLoading.value = true
-  getAdminIdentity().then(response => {
+  await getAdminIdentity().then(response => {
     roles = response
   }).finally(() => {
     formLoading.value = false
   })
   if (props.adminId) {
-    getEditAdminData(props.adminId).then(res => {
-      formData = res
+    await getEditAdminData(props.adminId).then(res => {
+      formData.value = res
     })
   }
 }

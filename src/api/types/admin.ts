@@ -31,8 +31,8 @@ export interface ICreateAdmin {
     account: string
     conf_pwd: string
     pwd: string
-    roles: string
-    status: number
+    roles: number[]
+    status: 0 | 1
     real_name: string
 }
 // admin-form
@@ -49,15 +49,6 @@ export interface IFormRule {
     validate?: FormItemRule[]
     value: string
     options?: ISelectOptions[]
-}
-
-export interface IFormData {
-    account: string
-    pwd: string
-    conf_pwd: string
-    roles: number[]
-    real_name: string
-    status: 0 | 1
 }
 
 export interface IResponseData {

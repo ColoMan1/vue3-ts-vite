@@ -109,7 +109,6 @@ const handleSubmit = async () => {
   const data = await Login(user).finally(() => {
     loading.value = false
   })
-  console.log(data)
 
   // 存用户信息
   store.commit('setUser', {
