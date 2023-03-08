@@ -52,10 +52,19 @@ export interface IFormRule {
 }
 
 export interface IFormData {
+    account: string
+    pwd: string
+    conf_pwd: string
+    roles: number[]
+    real_name: string
+    status: 0 | 1
+}
+
+export interface IResponseData {
     action: string
     info: string
     method: string
-    status: boolean
+    status: 0 | 1
     title: string
     rules: IFormRule[]
 }

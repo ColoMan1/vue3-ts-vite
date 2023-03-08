@@ -1,8 +1,8 @@
-import { default } from '../../plugins/element-plus';
 <template>
   <AdminDialog
     :title="props.adminId == null ? '新增' : '编辑'"
-    @closed="emit('update:admin-id', null)"
+    @closed="closed"
+    @open="handleOpen"
   >
     <el-form
       ref="form"
@@ -68,14 +68,10 @@ import { default } from '../../plugins/element-plus';
       </el-form-item>
       <el-form-item label="状态">
         <el-radio-group v-model="formData.status">
-          <el-radio
-            :label="1"
-          >
+          <el-radio :label="1">
             开启
           </el-radio>
-          <el-radio
-            :label="0"
-          >
+          <el-radio :label="0">
             关闭
           </el-radio>
         </el-radio-group>
@@ -85,10 +81,10 @@ import { default } from '../../plugins/element-plus';
 </template>
 
 <script setup lang='ts'>
-import { ISelectOptions } from '@/api/types/admin'
+import { IFormData, ISelectOptions } from '@/api/types/admin'
 import { PropType } from 'vue'
-import { getAdminIdentity } from '../../../api/admin'
-
+import { getAdminIdentity, getEditAdminData } from '../../../api/admin'
+import { ElForm } from 'element-plus'
 const props = defineProps({
   adminId: { // 编辑的管理员id
     type: Number as PropType<number | null>,
@@ -96,22 +92,17 @@ const props = defineProps({
   }
 })
 interface IEmit {
-    (e: 'update:admin-id', val: number | null): void
+  (e: 'update:admin-id', val: number | null): void
 }
 const emit = defineEmits<IEmit>()
+// 获取弹窗实例对象
+const form = ref<InstanceType<typeof ElForm> | null>(null)
 // 表单loading
 const formLoading = ref(false)
 // 初始化表单数据
 let roles = reactive<ISelectOptions[]>([])
-interface IFormData {
-  account: string
-  pwd: string
-  conf_pwd: string
-  roles: ISelectOptions[]
-  real_name: string
-  status: number
-}
-const formData = reactive<IFormData>({
+
+let formData = reactive<IFormData>({
   account: '',
   pwd: '',
   conf_pwd: '',
@@ -136,13 +127,29 @@ const formRules = {
     { required: true, message: '请输入管理员姓名', trigger: 'blur' }
   ]
 }
-// 生命周期
-onMounted(() => {
+// dialog打开
+const handleOpen = () => {
   formLoading.value = true
   getAdminIdentity().then(response => {
     roles = response
+  }).finally(() => {
+    formLoading.value = false
   })
-  formLoading.value = false
+  if (props.adminId) {
+    getEditAdminData(props.adminId).then(res => {
+      formData = res
+    })
+  }
+}
+// 弹窗关闭
+const closed = () => {
+  emit('update:admin-id', null)
+  form.value?.clearValidate()
+  form.value?.resetFields()
+}
+// 生命周期
+onMounted(() => {
+
 })
 </script>
 

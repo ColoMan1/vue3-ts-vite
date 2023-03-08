@@ -1,5 +1,5 @@
 import request from '../utils/request'
-import { Admin, IListParmas, ICreateAdmin, IFormData } from './types/admin'
+import { Admin, IListParmas, ICreateAdmin, IResponseData, IFormData } from './types/admin'
 
 // 管理员列表
 export const getAdmins = (params: IListParmas) => {
@@ -45,9 +45,9 @@ export const updateAdminStatus = (id: number, status: number) => {
     url: `/setting/set_status/${id}/${status}`
   })
 }
-// 过去管理员身份数据
+// 获取管理员身份数据
 export const getAdminIdentity = () => {
-  return request<IFormData>({
+  return request<IResponseData>({
     method: 'GET',
     url: '/setting/admin/create'
   }).then(res => {
@@ -56,5 +56,18 @@ export const getAdminIdentity = () => {
       return data?.options
     }
     return []
+  })
+}
+// 获取编辑管理员时的数据
+export const getEditAdminData = (id: number) => {
+  return request<IResponseData>({
+    method: 'GET',
+    url: `/setting/admin/${id}/edit`
+  }).then(res => {
+    const obj: Record<string, any> = {}
+    res.rules.forEach(item => {
+      obj[item.field] = item.value
+    })
+    return obj as IFormData
   })
 }
