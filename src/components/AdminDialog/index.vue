@@ -2,7 +2,7 @@ import { default } from '../../plugins/element-plus';
 <template>
   <el-dialog
     ref="dialog"
-    width="30%"
+    width="50%"
   >
     <slot />
     <template #footer>
@@ -31,7 +31,7 @@ interface IEmit {
 const emit = defineEmits<IEmit>()
 
 const handleCancel = () => {
-  if (dialog.value?.visible) {
+  if (dialog.value) {
     dialog.value.visible = false
   }
 }

@@ -148,9 +148,9 @@
   <admin-dialog
     v-model="formVisible"
     v-model:admin-id="adminId"
+    @success="submitSuccess"
   />
 </template>
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { getAdmins } from '@/api/admin'
 import { IListParmas, Admin } from '@/api/types/admin'
@@ -204,6 +204,11 @@ const handleStatus = async (item: Admin) => {
 const adminEdit = (id: number) => {
   adminId.value = id
   formVisible.value = true
+}
+// 提交成功
+const submitSuccess = () => {
+  formVisible.value = false
+  responseList()
 }
 </script>
 

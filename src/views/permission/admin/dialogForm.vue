@@ -3,6 +3,8 @@
     :title="props.adminId == null ? '新增' : '编辑'"
     @closed="closed"
     @open="handleOpen"
+    @confirm="handleConfirm"
+    ref="dialog"
   >
     <el-form
       ref="form"
@@ -83,8 +85,8 @@
 <script setup lang='ts'>
 import { ICreateAdmin, ISelectOptions } from '@/api/types/admin'
 import { PropType } from 'vue'
-import { getAdminIdentity, getEditAdminData } from '../../../api/admin'
-import { ElForm } from 'element-plus'
+import { getAdminIdentity, getEditAdminData, createAdmin, updateAdmin } from '../../../api/admin'
+import { ElForm, ElDialog, ElMessage } from 'element-plus'
 const props = defineProps({
   adminId: { // 编辑的管理员id
     type: Number as PropType<number | null>,
@@ -93,14 +95,17 @@ const props = defineProps({
 })
 interface IEmit {
   (e: 'update:admin-id', val: number | null): void
+  (e: 'success'): void
 }
 const emit = defineEmits<IEmit>()
+// 获取dialog实例
+const dialog = ref<InstanceType<typeof ElDialog> | null>(null)
 // 获取弹窗实例对象
 const form = ref<InstanceType<typeof ElForm> | null>(null)
 // 表单loading
 const formLoading = ref(false)
 // 初始化表单数据
-let roles = reactive<ISelectOptions[]>([])
+const roles = ref<ISelectOptions[]>([])
 
 const formData = ref<ICreateAdmin>({
   account: '',
@@ -128,18 +133,30 @@ const formRules = {
   ]
 }
 // dialog打开
-const handleOpen = async () => {
+const handleOpen = () => {
   formLoading.value = true
-  await getAdminIdentity().then(response => {
-    roles = response
-  }).finally(() => {
+  getAdminIdentity().then(response => {
+    roles.value = response
+  })
+  Promise.all([getAdminIdentity(), editData(props.adminId)]).finally(() => {
     formLoading.value = false
   })
-  if (props.adminId) {
-    await getEditAdminData(props.adminId).then(res => {
-      formData.value = res
-    })
+}
+// 获取编辑数据
+const editData = (id: number | null) => {
+  if (!id) {
+    return
   }
+  getEditAdminData(id).then(res => {
+    const arr = roles.value.filter(item => {
+      const temporary = item.value + ''
+      return res.roles.includes(temporary)
+    })
+    formData.value = res
+    arr.forEach((item, idx) => {
+      formData.value.roles.splice(idx, 1, item.label)
+    })
+  })
 }
 // 弹窗关闭
 const closed = () => {
@@ -147,10 +164,17 @@ const closed = () => {
   form.value?.clearValidate()
   form.value?.resetFields()
 }
-// 生命周期
-onMounted(() => {
-
-})
+// 确定提交
+const handleConfirm = async () => {
+  if (!form.value?.validate()) return
+  if (props.adminId) {
+    await updateAdmin(props.adminId, formData.value)
+  } else {
+    await createAdmin(formData.value)
+  }
+  emit('success')
+  ElMessage.success('提交成功')
+}
 </script>
 
 <style lang='stylus' scoped></style>

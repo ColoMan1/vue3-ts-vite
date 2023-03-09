@@ -1,5 +1,5 @@
 import request from '../utils/request'
-import { Admin, IListParmas, ICreateAdmin, IResponseData, IFormData } from './types/admin'
+import { Admin, IListParmas, IResponseData, ICreateAdmin } from './types/admin'
 
 // 管理员列表
 export const getAdmins = (params: IListParmas) => {
@@ -68,6 +68,6 @@ export const getEditAdminData = (id: number) => {
     res.rules.forEach(item => {
       obj[item.field] = item.value
     })
-    return obj as IFormData
+    return obj as ICreateAdmin
   })
 }
