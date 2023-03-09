@@ -150,11 +150,16 @@ const editData = (id: number | null) => {
   getEditAdminData(id).then(res => {
     const arr = roles.value.filter(item => {
       const temporary = item.value + ''
-      return res.roles.includes(temporary)
+      const arrRoles = [...res.roles].filter(single => {
+        return !isNaN(parseInt(single))
+      })
+      return arrRoles.includes(temporary)
     })
     formData.value = res
-    arr.forEach((item, idx) => {
-      formData.value.roles.splice(idx, 1, item.label)
+    const data = formData.value.roles
+    data.splice(0, data.length)
+    arr.forEach(item => {
+      data.push(item.label)
     })
   })
 }
