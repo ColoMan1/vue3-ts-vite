@@ -1,7 +1,7 @@
 <template>
-  <app-dialog-form
+  <admin-dialog
     :title="props.roleId ? '编辑角色' : '添加角色'"
-    :confirm="handleSubmit"
+    @confirm="handleSubmit"
     @closed="handleDialogClosed"
     @open="handleDialogOpen"
   >
@@ -43,16 +43,15 @@
         />
       </el-form-item>
     </el-form>
-  </app-dialog-form>
+  </admin-dialog>
 </template>
 
 <script lang="ts" setup>
 import { nextTick, ref } from 'vue'
 import type { PropType } from 'vue'
-import { ElMessage, ElForm, ElTree } from 'element-plus'
+import { ElMessage, ElForm, ElTree, FormItemRule } from 'element-plus'
 import { getMenus, getRole, saveRole } from '@/api/role'
 import type { Menu } from '@/api/types/role'
-import { FormItemRule } from 'element-plus/packages/form/src/form.js'
 
 const props = defineProps({
   roleId: { // 编辑的管理员 ID
@@ -104,15 +103,9 @@ const loadRole = async () => {
   await nextTick() // 菜单树渲染完成后处理后面的操作
   formData.value.role_name = role.role_name
   formData.value.status = role.status
-  setCheckedMenus(role.rules.split(',').map(id => Number.parseInt(id)))
-  // formData.value.checked_menus = role.rules.split(',').map(id => Number.parseInt(id))
-}
-
-const setCheckedMenus = (menus: number[]) => {
-  menus.forEach(menuId => {
-    const node = tree.value?.getNode(menuId)
-    if (node && node.isLeaf) { // 判断节点是否是叶子节点
-      tree.value?.setChecked(menuId, true, false)
+  role.rules.split(',').forEach(item => {
+    if (tree.value?.getNode(Number(item)).isLeaf) {
+      tree.value?.setChecked(Number(item), true, true)
     }
   })
 }
@@ -128,10 +121,10 @@ const handleSubmit = async () => {
   if (!valid) {
     return
   }
-  // TODO: 添加 / 更新角色
+  // 添加 / 更新角色
   formData.value.checked_menus = [
-    ...tree.value?.getCheckedKeys(true) as any,
-    ...tree.value?.getHalfCheckedKeys() as any
+    ...tree.value?.getHalfCheckedKeys() as any,
+    ...tree.value?.getCheckedKeys() as any
   ]
   await saveRole(props.roleId || 0, formData.value)
   emit('success')

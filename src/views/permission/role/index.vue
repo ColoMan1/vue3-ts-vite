@@ -120,7 +120,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <app-pagination
+      <Pagination
         v-model:page="listParams.page"
         v-model:limit="listParams.limit"
         :list-count="listCount"
