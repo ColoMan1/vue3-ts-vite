@@ -226,7 +226,7 @@ import { onMounted, reactive, ref } from 'vue'
 import * as productApi from '@/api/product'
 import { ElMessage } from 'element-plus'
 import type { Product, ProductListParams, ProductType, ProductCategory } from '@/api/types/product'
-import { updateProductsUnshow } from '@/api/product'
+import { updateProductsShow, updateProductsUnshow } from '@/api/product'
 // import { jsonToExcel } from '@/utils/export-to-excel'
 
 const productTypes = ref<ProductType[]>([])
@@ -296,14 +296,16 @@ const handleDelete = async () => {
 const handleSortChange = () => {
 
 }
-
+// 当前选中的所有行的id
+const arrId = Array.from({ length: selectionItems.value.length }, (_: any, idx: number) => (selectionItems.value[idx].id))
+// 批量上架
 const handleUpdateProductsShow = async () => {
-
+  await updateProductsShow(arrId)
+  ElMessage.success('批量上架成功')
 }
 // 批量下架
 const handleUpdateProductsUnshow = async () => {
-  const arr = Array.from({ length: selectionItems.value.length }, (_: any, idx: number) => (selectionItems.value[idx].id))
-  await updateProductsUnshow(arr)
+  await updateProductsUnshow(arrId)
   loadList()
   ElMessage.success('批量下架成功')
 }
