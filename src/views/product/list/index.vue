@@ -199,7 +199,7 @@
             </el-button>
             <el-popconfirm
               :title="row.is_del ? '确定恢复商品吗？' : '确定移到回收站吗？'"
-              @confirm="handleDelete(row.id)"
+              @confirm="handleDelete()"
             >
               <template #reference>
                 <el-button type="text">
@@ -226,6 +226,7 @@ import { onMounted, reactive, ref } from 'vue'
 import * as productApi from '@/api/product'
 import { ElMessage } from 'element-plus'
 import type { Product, ProductListParams, ProductType, ProductCategory } from '@/api/types/product'
+import { updateProductsUnshow } from '@/api/product'
 // import { jsonToExcel } from '@/utils/export-to-excel'
 
 const productTypes = ref<ProductType[]>([])
@@ -299,9 +300,12 @@ const handleSortChange = () => {
 const handleUpdateProductsShow = async () => {
 
 }
-
+// 批量下架
 const handleUpdateProductsUnshow = async () => {
-
+  const arr = Array.from({ length: selectionItems.value.length }, (_: any, idx: number) => (selectionItems.value[idx].id))
+  await updateProductsUnshow(arr)
+  loadList()
+  ElMessage.success('批量下架成功')
 }
 
 const handleExportExcel = async () => {
@@ -319,15 +323,16 @@ const handleExportExcel = async () => {
 
 .demo-table-expand {
   font-size: 0;
+
   :deep(label) {
     width: 90px;
     color: #99a9bf;
   }
+
   :deep(.el-form-item) {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
   }
 }
-
 </style>
