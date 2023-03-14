@@ -301,7 +301,7 @@ const arrId = Array.from({ length: selectionItems.value.length }, (_: any, idx: 
 // 批量上架
 const handleUpdateProductsShow = async () => {
   await updateProductsShow(arrId)
-  ElMessage.success('批量上架成功')
+  ElMessage.success('批量上架成功！')
 }
 // 批量下架
 const handleUpdateProductsUnshow = async () => {
