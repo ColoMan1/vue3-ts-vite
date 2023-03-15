@@ -227,7 +227,7 @@ import * as productApi from '@/api/product'
 import { ElMessage } from 'element-plus'
 import type { Product, ProductListParams, ProductType, ProductCategory } from '@/api/types/product'
 import { updateProductsShow, updateProductsUnshow } from '@/api/product'
-// import { jsonToExcel } from '@/utils/export-to-excel'
+import jsonToExcel from '@/utils/jsonToExcel'
 
 const productTypes = ref<ProductType[]>([])
 const productCates = ref<ProductCategory[]>([])
@@ -309,9 +309,24 @@ const handleUpdateProductsUnshow = async () => {
   loadList()
   ElMessage.success('批量下架成功')
 }
-
+const header = {
+  id: '商品ID',
+  image: '图片',
+  store_name: '商品名称',
+  price: '商品售价',
+  sales: '销量',
+  stock: '库存',
+  sort: '排序',
+  is_show: '状态'
+}
+// 导出表格
 const handleExportExcel = async () => {
-
+  jsonToExcel({
+    data: selectionItems.value,
+    sheetName: '测试',
+    bookType: 'xlsx',
+    header
+  })
 }
 
 </script>
