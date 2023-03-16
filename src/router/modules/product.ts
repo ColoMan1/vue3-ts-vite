@@ -40,6 +40,14 @@ const routes: RouteRecordRaw =
           title: '商品评论'
         },
         component: async () => await import('../../views/product/reply/index.vue')
+      },
+      {
+        path: 'add',
+        name: 'product-add',
+        component: async () => await import('../../views/product/add/index.vue'),
+        meta: {
+          title: '添加商品'
+        }
       }
     ]
   }
