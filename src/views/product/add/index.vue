@@ -113,7 +113,10 @@
           label="商品详情"
           prop="description"
         >
-          <Editor1 ref="editor1" />
+          <Editor
+            ref="editor"
+            v-model="editorValue"
+          />
         </el-form-item>
         <el-form-item
           label="虚拟销量"
@@ -242,10 +245,10 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import type { ProductAttr, ProductCategory, AttrRuleValue, AttrTableHeader } from '@/api/types/product'
-import Editor1 from '@/components/Editor/index.vue'
+import Editor from '@/components/Editor/index.vue'
 
 const productCates = ref<ProductCategory[]>([]) // 商品分类
-
+const editorValue = ref('<p>hello</p>')
 const singleAttrData = ref([{
   pic: '',
   vip_price: 0,
@@ -305,11 +308,10 @@ onMounted(() => {
     // valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
   }, 1500)
 })
-
-const editor1 = ref()
-onMounted(() => {
-  console.log(editor1.value.valueHtml)
-  product.value.description = editor1.value.valueHtml
+// 富文本编辑器实例
+const editor = ref()
+watch(editorValue, () => {
+  product.value.description = editorValue.value as unknown as string
 })
 
 </script>

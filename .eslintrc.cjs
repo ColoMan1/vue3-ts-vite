@@ -16,7 +16,7 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['src/api/**/*.ts', 'src/views/**/*.vue'],
+      files: ['src/api/**/*.ts', 'src/views/**/*.vue', 'src/components/**/*.ts'],
       rules: {
         camelcase: 'off'
       }

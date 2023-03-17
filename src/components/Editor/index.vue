@@ -10,6 +10,7 @@
       v-model="valueHtml"
       :default-config="editorConfig"
       @on-created="handleCreated"
+      @on-change="editorChange"
     />
   </div>
 </template>
@@ -19,15 +20,28 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import { onBeforeUnmount, ref, shallowRef } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { IDomEditor, IEditorConfig } from '@wangeditor/editor'
 
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef()
 
+const props = withDefaults(defineProps<{
+  editorValue: string
+}>(), {
+  editorValue: ''
+})
+const emit = defineEmits(['update:modelValue'])
+const editorConfig: Partial<IEditorConfig> = {
+  placeholder: props.editorValue
+}
+const editorChange = (editor: IDomEditor) => {
+  console.log('content', editor.getHtml())
+  emit('update:modelValue', editor.getHtml())
+}
 // 内容 HTML
-const valueHtml = ref('<p>hello</p>')
+const valueHtml = ref(props.editorValue)
 
 const toolbarConfig = {}
-const editorConfig = { placeholder: '请输入内容...' }
 
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
