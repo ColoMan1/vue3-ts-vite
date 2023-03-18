@@ -115,7 +115,7 @@
         >
           <Editor
             ref="editor"
-            v-model="editorValue"
+            v-model:editorValue="editorValue"
           />
         </el-form-item>
         <el-form-item
@@ -309,11 +309,10 @@ onMounted(() => {
   }, 1500)
 })
 // 富文本编辑器实例
-const editor = ref()
-watch(editorValue, () => {
-  product.value.description = editorValue.value as unknown as string
-})
-
+const editor = ref<InstanceType<typeof Editor>>()
+// watch(editorValue, () => {
+//   product.value.description = editorValue.value as unknown as string
+// })
 </script>
 <style lang="scss" scoped>
 :deep(.el-form-item__content) {

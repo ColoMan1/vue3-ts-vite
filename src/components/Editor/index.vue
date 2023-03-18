@@ -3,11 +3,13 @@
     <Toolbar
       style="border-bottom: 1px solid #ccc"
       :editor="editorRef"
+      mode="default"
       :default-config="toolbarConfig"
     />
     <Editor
       style="height: 500px; overflow-y: hidden;"
       v-model="valueHtml"
+      mode="default"
       :default-config="editorConfig"
       @on-created="handleCreated"
       @on-change="editorChange"
@@ -25,21 +27,22 @@ import { IDomEditor, IEditorConfig } from '@wangeditor/editor'
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef()
 
-const props = withDefaults(defineProps<{
-  editorValue: string
-}>(), {
-  editorValue: ''
+const props = defineProps({
+  editorValue: {
+    type: String,
+    default: '这个真没有'
+  }
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:editorValue'])
 const editorConfig: Partial<IEditorConfig> = {
-  placeholder: props.editorValue
 }
+
 const editorChange = (editor: IDomEditor) => {
   console.log('content', editor.getHtml())
-  emit('update:modelValue', editor.getHtml())
+  emit('update:editorValue', editor.getHtml())
 }
 // 内容 HTML
-const valueHtml = ref(props.editorValue)
+const valueHtml = ref('<p>模拟 Ajax 异步设置内容</p>')
 
 const toolbarConfig = {}
 
@@ -52,11 +55,8 @@ onBeforeUnmount(() => {
 
 const handleCreated = (editor: any) => {
   editorRef.value = editor // 记录 editor 实例，重要！
+  editor.setHtml(props.editorValue)
 }
-
-defineExpose({
-  valueHtml
-})
 </script>
 
 <style lang='stylus' scoped></style>
