@@ -115,7 +115,7 @@
         >
           <Editor
             ref="editor"
-            v-model:editorValue="editorValue"
+            v-model:editorValue="product.description"
           />
         </el-form-item>
         <el-form-item
@@ -229,7 +229,21 @@
         <el-form-item
           label="活动优先级"
           prop="activity"
-        />
+        >
+          <Draggable v-model="activities">
+            <el-space
+              :size="10"
+              v-for="item in activities"
+              :key="item.name"
+            >
+              <el-tag
+                :type="item.type as typeof item.type"
+              >
+                {{ item.name }}
+              </el-tag>
+            </el-space>
+          </Draggable>
+        </el-form-item>
         <el-form-item>
           <el-button
             type="primary"
@@ -243,12 +257,18 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import type { ProductAttr, ProductCategory, AttrRuleValue, AttrTableHeader } from '@/api/types/product'
 import Editor from '@/components/Editor/index.vue'
 
+const activities = ref([
+  { type: 'danger', name: '秒杀' },
+  { type: 'info', name: '默认' },
+  { type: 'warning', name: '砍价' },
+  { type: 'success', name: '拼团' }
+])
+
 const productCates = ref<ProductCategory[]>([]) // 商品分类
-const editorValue = ref('<p>hello</p>')
 const singleAttrData = ref([{
   pic: '',
   vip_price: 0,
@@ -262,13 +282,16 @@ const singleAttrData = ref([{
   brokerage: 0,
   brokerage_two: 0
 }])
+const computedActivity = computed(() => {
+  return activities.value.map(item => item.name)
+})
 const product = ref({
   attrs: [] as ProductAttr[], // 商品规格
   cate_id: [] as number[],
   command_word: '',
   couponName: [],
   coupon_ids: [],
-  description: '<p>hello</p>',
+  description: '<p>hello1</p>',
   ficti: 0,
   give_integral: 0,
   header: [] as AttrTableHeader[],
@@ -300,19 +323,18 @@ const product = ref({
   store_name: '',
   temp_id: '',
   unit_name: '',
-  video_link: ''
+  video_link: '',
+  activity: computedActivity
 })
+
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   setTimeout(() => {
-    // valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
+    product.value.description = '<p>这是测内容</p>'
   }, 1500)
 })
 // 富文本编辑器实例
 const editor = ref<InstanceType<typeof Editor>>()
-// watch(editorValue, () => {
-//   product.value.description = editorValue.value as unknown as string
-// })
 </script>
 <style lang="scss" scoped>
 :deep(.el-form-item__content) {

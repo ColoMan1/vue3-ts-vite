@@ -34,15 +34,14 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['update:editorValue'])
-const editorConfig: Partial<IEditorConfig> = {
-}
+const editorConfig: Partial<IEditorConfig> = {}
 
 const editorChange = (editor: IDomEditor) => {
   console.log('content', editor.getHtml())
   emit('update:editorValue', editor.getHtml())
 }
 // 内容 HTML
-const valueHtml = ref('<p>模拟 Ajax 异步设置内容</p>')
+const valueHtml = ref(props.editorValue)
 
 const toolbarConfig = {}
 
@@ -55,8 +54,13 @@ onBeforeUnmount(() => {
 
 const handleCreated = (editor: any) => {
   editorRef.value = editor // 记录 editor 实例，重要！
-  editor.setHtml(props.editorValue)
 }
+// 监听父组件初始化编辑器内容
+const stopHandle = watch(() => props.editorValue, (newV, oldV) => {
+  console.log(newV, oldV)
+  valueHtml.value = newV
+  stopHandle()
+})
 </script>
 
 <style lang='stylus' scoped></style>

@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AdminDialog: typeof import('./components/AdminDialog/index.vue')['default']
     Card: typeof import('./components/Card/index.vue')['default']
+    Draggable: typeof import('./components/Draggable/index.vue')['default']
     Editor: typeof import('./components/Editor/index.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
