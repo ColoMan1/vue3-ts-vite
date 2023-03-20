@@ -255,7 +255,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, computed } from 'vue'
-import type { ProductAttr, ProductCategory, AttrRuleValue, AttrTableHeader } from '@/api/types/product'
+import type { ProductAttr, ProductCategory, AttrRuleValue, AttrTableHeader, ProductAttrTpl } from '@/api/types/product'
 import Editor from '@/components/Editor/index.vue'
 import { getAttrs } from '../../../api/product'
 
@@ -266,11 +266,7 @@ const activities = ref([
   { type: 'success', name: '拼团' }
 ])
 // 规格模板
-interface IAttrModelVariable {
-  id: number
-  rule_name: string
-}
-const attrModelVariable = ref<IAttrModelVariable[]>([])
+const attrModelVariable = ref<ProductAttrTpl[]>([])
 // 商品分类
 const productCates = ref<ProductCategory[]>([])
 // 单规格
@@ -343,16 +339,11 @@ const attrModel = async () => {
   return await getAttrs()
 }
 
-// 模拟 ajax 异步获取内容
 onMounted(() => {
   attrModel().then(res => {
-    attrModelVariable.value = res.map(item => {
-      return {
-        id: item.id,
-        rule_name: item.rule_name
-      }
-    })
+    attrModelVariable.value = res
   })
+  // 模拟 ajax 异步获取内容
   setTimeout(() => {
     product.value.description = '<p>这是测内容</p>'
   }, 1500)
