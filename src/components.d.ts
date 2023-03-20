@@ -10,6 +10,8 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AdminDialog: typeof import('./components/AdminDialog/index.vue')['default']
+    AttrSelect: typeof import('./components/AttrSelect/index.vue')['default']
+    AttrTable: typeof import('./components/AttrTable/index.vue')['default']
     Card: typeof import('./components/Card/index.vue')['default']
     Draggable: typeof import('./components/Draggable/index.vue')['default']
     Editor: typeof import('./components/Editor/index.vue')['default']

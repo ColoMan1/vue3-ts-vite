@@ -102,11 +102,8 @@
           class="multi-attr-form_item"
           label="规格模板"
         >
-          <el-space
-            direction="vertical"
-            fill
-            style="width: 100%;"
-            alignment="flex-start"
+          <AttrSelect
+            v-model="attrModelVariable"
           />
         </el-form-item>
         <el-form-item
@@ -247,7 +244,6 @@
         <el-form-item>
           <el-button
             type="primary"
-            @click="test"
           >
             保存
           </el-button>
@@ -261,6 +257,7 @@
 import { onMounted, ref, computed } from 'vue'
 import type { ProductAttr, ProductCategory, AttrRuleValue, AttrTableHeader } from '@/api/types/product'
 import Editor from '@/components/Editor/index.vue'
+import { getAttrs } from '../../../api/product'
 
 const activities = ref([
   { type: 'danger', name: '秒杀' },
@@ -268,8 +265,14 @@ const activities = ref([
   { type: 'warning', name: '砍价' },
   { type: 'success', name: '拼团' }
 ])
-
-const productCates = ref<ProductCategory[]>([]) // 商品分类
+// 规格模板
+interface IAttrModelVariable {
+  id: number
+  rule_name: string
+}
+const attrModelVariable = ref<IAttrModelVariable[]>([])
+// 商品分类
+const productCates = ref<ProductCategory[]>([])
 // 单规格
 const singleAttrData = ref<ProductAttr[]>([{
   pic: '',
@@ -285,7 +288,7 @@ const singleAttrData = ref<ProductAttr[]>([{
   brokerage_two: 0
 }])
 // 多规格
-// const multiAttrData = ref<ProductAttr[]>([])
+const multiAttrData = ref<ProductAttr[]>([])
 const computedActivity = computed(() => {
   return activities.value.map(item => item.name)
 })
@@ -330,13 +333,26 @@ const product = ref({
   video_link: '',
   activity: computedActivity
 })
+// 根据选择单规格还是多规格显示不同的数据
+watchEffect(() => {
+  product.value.attrs = product.value.spec_type === 0 ? singleAttrData.value : multiAttrData.value
+})
 
-// watchEffect(() => {
-//   product.value.attrs = product.value.spec_type === 0 ? singleAttrData : multiAttrData
-// })
+// 获取规格模板
+const attrModel = async () => {
+  return await getAttrs()
+}
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
+  attrModel().then(res => {
+    attrModelVariable.value = res.map(item => {
+      return {
+        id: item.id,
+        rule_name: item.rule_name
+      }
+    })
+  })
   setTimeout(() => {
     product.value.description = '<p>这是测内容</p>'
   }, 1500)
