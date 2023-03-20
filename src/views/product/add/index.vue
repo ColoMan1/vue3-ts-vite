@@ -247,6 +247,7 @@
         <el-form-item>
           <el-button
             type="primary"
+            @click="test"
           >
             保存
           </el-button>
@@ -269,7 +270,8 @@ const activities = ref([
 ])
 
 const productCates = ref<ProductCategory[]>([]) // 商品分类
-const singleAttrData = ref([{
+// 单规格
+const singleAttrData = ref<ProductAttr[]>([{
   pic: '',
   vip_price: 0,
   price: 0,
@@ -282,6 +284,8 @@ const singleAttrData = ref([{
   brokerage: 0,
   brokerage_two: 0
 }])
+// 多规格
+// const multiAttrData = ref<ProductAttr[]>([])
 const computedActivity = computed(() => {
   return activities.value.map(item => item.name)
 })
@@ -327,14 +331,16 @@ const product = ref({
   activity: computedActivity
 })
 
+// watchEffect(() => {
+//   product.value.attrs = product.value.spec_type === 0 ? singleAttrData : multiAttrData
+// })
+
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   setTimeout(() => {
     product.value.description = '<p>这是测内容</p>'
   }, 1500)
 })
-// 富文本编辑器实例
-const editor = ref<InstanceType<typeof Editor>>()
 </script>
 <style lang="scss" scoped>
 :deep(.el-form-item__content) {
