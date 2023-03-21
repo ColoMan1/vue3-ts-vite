@@ -65,6 +65,8 @@ const props = defineProps({
     default: () => []
   }
 })
+const emit = defineEmits(['generateHandle'])
+
 // 选择规格
 const selectValue = ref<number>()
 // 规格数据
@@ -76,9 +78,10 @@ const confrim = () => {
 }
 // 点击立即生成
 const immediateGeneration = async () => {
-  await generateAttr(0, 1, {
+  const generateData = await generateAttr(0, 1, {
     attrs: ruleData.value as AttrRuleValue[]
   })
+  emit('generateHandle', generateData)
 }
 </script>
 

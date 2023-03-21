@@ -104,6 +104,7 @@
         >
           <AttrSelect
             v-model="attrModelVariable"
+            @generate-handle="generateHandle"
           />
         </el-form-item>
         <el-form-item
@@ -338,6 +339,16 @@ watchEffect(() => {
 const attrModel = async () => {
   return await getAttrs()
 }
+
+// 点击立即生成获取到的模板数据
+// interface IGenerate {
+//   attr: AttrRuleValue[]
+//   header: AttrTableHeader[]
+//   value: ProductAttr[]
+// }
+// const generateHandle = <IGenerate>({ attr, header , value}) => {
+
+// }
 
 onMounted(() => {
   attrModel().then(res => {
