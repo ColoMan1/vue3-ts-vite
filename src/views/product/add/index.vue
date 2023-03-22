@@ -108,11 +108,46 @@
           />
         </el-form-item>
         <el-form-item
+          v-if="product.spec_type === 1 && multiAttrData.length"
+          class="multi-attr-form_item"
+          label="批量设置"
+        >
+          <!-- <AttrTable v-model="[multiAttrData[0]]" /> -->
+        </el-form-item>
+        <el-form-item
+          v-if="product.spec_type === 1 && multiAttrData.length"
+          class="multi-attr-form_item"
+          label="商品属性"
+        >
+          <AttrTable v-model="multiAttrData">
+            <template #prepend>
+              <el-table-column
+                :label="item.title"
+                min-width="100"
+                v-for="item in tableHeaderSlot"
+                :key="item.key"
+                :prop="item.key"
+              />
+            </template>
+            <template #append>
+              <el-table-column
+                fixed="right"
+                label="操作"
+              >
+                <template #default="{ $index }">
+                  <el-button @click="handleDelete($index)">
+                    删除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </template>
+          </AttrTable>
+        </el-form-item>
+        <el-form-item
           label="商品详情"
           prop="description"
         >
           <Editor
-            ref="editor"
             v-model:editorValue="product.description"
           />
         </el-form-item>
@@ -339,16 +374,25 @@ watchEffect(() => {
 const attrModel = async () => {
   return await getAttrs()
 }
-
 // 点击立即生成获取到的模板数据
-// interface IGenerate {
-//   attr: AttrRuleValue[]
-//   header: AttrTableHeader[]
-//   value: ProductAttr[]
-// }
-// const generateHandle = <IGenerate>({ attr, header , value}) => {
-
-// }
+interface IGenerate {
+  attr: AttrRuleValue[]
+  header: AttrTableHeader[]
+  value: ProductAttr[]
+}
+const generateHandle = <T extends IGenerate>({ attr, header, value }: T): void => {
+  multiAttrData.value = value
+  product.value.header = header
+  product.value.items = attr
+}
+// 拿到自定义列数据
+const tableHeaderSlot = computed(() => {
+  return product.value.header.filter(item => 'key' in item && item.key.startsWith('value'))
+})
+// 商品属性删除
+const handleDelete = (index: number) => {
+  multiAttrData.value.splice(index, 1)
+}
 
 onMounted(() => {
   attrModel().then(res => {

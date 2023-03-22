@@ -81,7 +81,7 @@ const immediateGeneration = async () => {
   const generateData = await generateAttr(0, 1, {
     attrs: ruleData.value as AttrRuleValue[]
   })
-  emit('generateHandle', generateData)
+  emit('generateHandle', generateData.info)
 }
 </script>
 
