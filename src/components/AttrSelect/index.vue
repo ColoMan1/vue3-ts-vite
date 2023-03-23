@@ -1,57 +1,80 @@
 import { PropType } from 'vue';
 <template>
-  <el-space direction="vertical">
-    <el-space
-      direction="horizontal"
-    >
-      <el-select
-        v-model="selectValue"
-        class="m-2"
-        placeholder="Select"
-        size="large"
+  <el-form>
+    <el-form-item>
+      <el-space
+        direction="horizontal"
       >
-        <el-option
-          v-for="item in props.modelValue"
-          :key="item.id"
-          :label="item.rule_name"
-          :value="item.id"
-        />
-      </el-select>
-      <el-button
-        type="primary"
-        @click="confrim"
-      >
-        确认
-      </el-button>
-      <el-button>添加规格模板</el-button>
-    </el-space>
-    <el-space
-      direction="vertical"
-    >
-      <template
-        v-for="details in ruleData"
-        :key="details.id"
-      >
-        <div>{{ details.value }}</div>
-        <el-space
-          direction="horizontal"
+        <el-select
+          v-model="selectValue"
+          class="m-2"
+          placeholder="Select"
+          size="large"
         >
-          <el-tag
-            v-for="single in details.detail"
-            :key="single"
-          >
-            {{ single }}
-          </el-tag>
-        </el-space>
-      </template>
-    </el-space>
-    <el-space>
-      <el-button>添加新规格</el-button>
-      <el-button @click="immediateGeneration">
-        立即生成
-      </el-button>
-    </el-space>
-  </el-space>
+          <el-option
+            v-for="item in props.modelValue"
+            :key="item.id"
+            :label="item.rule_name"
+            :value="item.id"
+          />
+        </el-select>
+        <el-button
+          type="primary"
+          @click="confrim"
+        >
+          确认
+        </el-button>
+        <el-button>添加规格模板</el-button>
+      </el-space>
+    </el-form-item>
+    <el-form-item>
+      <el-form label-position="left">
+        <el-form-item
+          v-for="(details, index) in ruleData"
+          :key="details.value"
+        >
+          <template #label>
+            <el-icon>
+              <Edit />
+            </el-icon>
+          </template>
+          <div>
+            <div>
+              <el-tag
+                closable
+                effect="dark"
+                @close="ruleData?.splice(index, 1)"
+              >
+                {{ details.value }}
+              </el-tag>
+            </div>
+            <div>
+              <el-space
+                direction="horizontal"
+              >
+                <el-tag
+                  closable
+                  v-for="(single, idx) in details.detail"
+                  :key="single"
+                  @close="details.detail.splice(idx, 1)"
+                >
+                  {{ single }}
+                </el-tag>
+              </el-space>
+            </div>
+          </div>
+        </el-form-item>
+      </el-form>
+    </el-form-item>
+    <el-form-item v-if="ruleData?.length">
+      <el-space direction="horizontal">
+        <el-button>添加新规格</el-button>
+        <el-button @click="immediateGeneration">
+          立即生成
+        </el-button>
+      </el-space>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script lang='ts' setup>

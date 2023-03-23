@@ -100,7 +100,7 @@
         <el-form-item
           v-if="product.spec_type === 1"
           class="multi-attr-form_item"
-          label="规格模板"
+          label="选择规格"
         >
           <AttrSelect
             v-model="attrModelVariable"
@@ -112,7 +112,23 @@
           class="multi-attr-form_item"
           label="批量设置"
         >
-          <!-- <AttrTable v-model="[multiAttrData[0]]" /> -->
+          <AttrTable v-model="batchSetting">
+            <template #append>
+              <el-table-column
+                fixed="right"
+                label="操作"
+              >
+                <template #default>
+                  <el-button @click="batchAdd">
+                    批量添加
+                  </el-button>
+                  <el-button @click="emptyBatchSetting">
+                    清空
+                  </el-button>
+                </template>
+              </el-table-column>
+            </template>
+          </AttrTable>
         </el-form-item>
         <el-form-item
           v-if="product.spec_type === 1 && multiAttrData.length"
@@ -319,6 +335,21 @@ const singleAttrData = ref<ProductAttr[]>([{
   brokerage: 0,
   brokerage_two: 0
 }])
+// 批量设置
+const defaultBatchSetting = [{
+  pic: '',
+  vip_price: 0,
+  price: 0,
+  cost: 0,
+  ot_price: 0,
+  stock: 0,
+  bar_code: '',
+  weight: 0,
+  volume: 0,
+  brokerage: 0,
+  brokerage_two: 0
+}]
+const batchSetting = ref<ProductAttr[]>(JSON.parse(JSON.stringify(defaultBatchSetting)))
 // 多规格
 const multiAttrData = ref<ProductAttr[]>([])
 const computedActivity = computed(() => {
@@ -393,7 +424,24 @@ const tableHeaderSlot = computed(() => {
 const handleDelete = (index: number) => {
   multiAttrData.value.splice(index, 1)
 }
-
+// 批量添加
+const batchAdd = () => {
+  const data = batchSetting.value[0]
+  const obj: Record<string, any> = {}
+  for (const key in data) {
+    if (Number(data[key])) {
+      obj[key] = data[key]
+    }
+  }
+  console.log(obj)
+  multiAttrData.value.forEach(item => {
+    Object.assign(item, obj)
+  })
+}
+// 清空
+const emptyBatchSetting = () => {
+  batchSetting.value = JSON.parse(JSON.stringify(defaultBatchSetting))
+}
 onMounted(() => {
   attrModel().then(res => {
     attrModelVariable.value = res
