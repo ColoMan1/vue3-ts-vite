@@ -82,8 +82,6 @@ export interface ProductCategory {
 export interface AttrRuleValue {
     value: string
     detail: string[]
-    inputVisible?: boolean
-    inputValue?: string
 }
 
 export interface ProductAttrTpl {

@@ -60,6 +60,23 @@ import { PropType } from 'vue';
                 >
                   {{ single }}
                 </el-tag>
+                <el-input
+                  v-if="details.inputVisible"
+                  ref="InputRef"
+                  v-model="details.inputValue"
+                  class="ml-1 w-20"
+                  size="small"
+                  @keyup.enter="handleInputConfirm(details)"
+                  @blur="handleInputConfirm(details)"
+                />
+                <el-button
+                  v-else
+                  class="button-new-tag ml-1"
+                  size="small"
+                  @click="showInput(details)"
+                >
+                  + New Tag
+                </el-button>
               </el-space>
             </div>
           </div>
@@ -80,7 +97,8 @@ import { PropType } from 'vue';
 <script lang='ts' setup>
 import { generateAttr } from '@/api/product'
 import { AttrRuleValue, ProductAttrTpl } from '@/api/types/product'
-import { PropType } from 'vue'
+import { PropType, nextTick, ref } from 'vue'
+import { ElInput } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -93,11 +111,16 @@ const emit = defineEmits(['generateHandle'])
 // 选择规格
 const selectValue = ref<number>()
 // 规格数据
-const ruleData = ref<AttrRuleValue[] | undefined>([])
+type RuleValueType = { inputValue: string, inputVisible: boolean} & AttrRuleValue
+const ruleData = ref<RuleValueType[]>([])
 // 点击确认按钮
 const confrim = () => {
   if (typeof selectValue.value === 'undefined') return
-  ruleData.value = props.modelValue.find(item => item.id === selectValue.value)?.rule_value
+  ruleData.value = props.modelValue.find(item => item.id === selectValue.value)!.rule_value as RuleValueType[]
+  ruleData.value.forEach(item => {
+    item.inputValue = ''
+    item.inputVisible = false
+  })
 }
 // 点击立即生成
 const immediateGeneration = async () => {
@@ -106,6 +129,22 @@ const immediateGeneration = async () => {
   })
   emit('generateHandle', generateData.info)
 }
+// 动态tag
+const InputRef = ref<InstanceType<typeof ElInput>>()
+
+const showInput = async (item: RuleValueType) => {
+  item.inputVisible = true
+  await nextTick()
+  console.log(typeof InputRef.value)
+  // InputRef.value!.focus()
+}
+
+const handleInputConfirm = (item: RuleValueType) => {
+  item.inputVisible = false
+  if (item.inputValue) item.detail.push(item.inputValue)
+  item.inputValue = ''
+}
+
 </script>
 
 <style lang='stylus' scoped></style>
