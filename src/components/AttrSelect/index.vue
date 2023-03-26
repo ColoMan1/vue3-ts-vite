@@ -83,13 +83,46 @@ import { PropType } from 'vue';
         </el-form-item>
       </el-form>
     </el-form-item>
-    <el-form-item v-if="ruleData?.length">
+    <el-form-item v-if="!isAdd">
       <el-space direction="horizontal">
-        <el-button>添加新规格</el-button>
+        <el-button @click="isAdd = true">
+          添加新规格
+        </el-button>
         <el-button @click="immediateGeneration">
           立即生成
         </el-button>
       </el-space>
+    </el-form-item>
+    <el-form-item v-else>
+      <el-form
+        :model="attrForm"
+        ref="form"
+        inline
+      >
+        <el-form-item
+          label="规格名称"
+          prop="value"
+        >
+          <el-input v-model="attrForm.value" />
+        </el-form-item>
+        <el-form-item
+          label="规格值"
+          prop="detail"
+        >
+          <el-input v-model="attrForm.detail[0]" />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            @click="handleAddAttr"
+          >
+            确认
+          </el-button>
+          <el-button @click="isAdd = false">
+            取消
+          </el-button>
+        </el-form-item>
+      </el-form>
     </el-form-item>
   </el-form>
 </template>
@@ -130,13 +163,12 @@ const immediateGeneration = async () => {
   emit('generateHandle', generateData.info)
 }
 // 动态tag
-const InputRef = ref<InstanceType<typeof ElInput>>()
+const InputRef = ref<InstanceType<typeof ElInput>[]>([])
 
 const showInput = async (item: RuleValueType) => {
   item.inputVisible = true
   await nextTick()
-  console.log(typeof InputRef.value)
-  // InputRef.value!.focus()
+  InputRef.value.forEach((item: any) => item.focus())
 }
 
 const handleInputConfirm = (item: RuleValueType) => {
@@ -145,6 +177,24 @@ const handleInputConfirm = (item: RuleValueType) => {
   item.inputValue = ''
 }
 
+// 新增规格数据
+const attrForm = ref({
+  value: '',
+  detail: ['']
+})
+
+// 确认新增规格事件
+const handleAddAttr = () => {
+  ruleData.value.push({
+    inputValue: '',
+    inputVisible: false,
+    value: attrForm.value.value,
+    detail: attrForm.value.detail
+  })
+  isAdd.value = false
+}
+// 控制添加规格显示隐藏
+const isAdd = ref(false)
 </script>
 
 <style lang='stylus' scoped></style>
