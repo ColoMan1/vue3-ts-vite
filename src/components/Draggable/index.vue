@@ -25,18 +25,18 @@ const initCreate = () => {
   if (!drag.value) {
     throw new Error('容器不能为空')
   }
-  const sortable = Sortable.create(drag.value, {
+  Sortable.create(drag.value, {
     animation: 500,
     onUpdate: function (evt) {
       const oldIdx = evt.oldIndex
       const newIdx = evt.newIndex
       if (typeof oldIdx !== 'number' || typeof newIdx !== 'number') return
       const arr = [...porps.modelValue]
+      console.log(arr)
       const temporary = arr.splice(oldIdx, 1)[0]
       arr.splice(newIdx, 0, temporary)
       emit('update:modelValue', arr)
     }
   })
-  console.log(sortable)
 }
 </script>

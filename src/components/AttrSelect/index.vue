@@ -29,58 +29,62 @@ import { PropType } from 'vue';
     </el-form-item>
     <el-form-item>
       <el-form label-position="left">
-        <el-form-item
-          v-for="(details, index) in ruleData"
-          :key="details.value"
-        >
-          <template #label>
-            <el-icon>
-              <Edit />
-            </el-icon>
-          </template>
-          <div>
+        <Draggable v-model="ruleData">
+          <el-form-item
+            v-for="(details, index) in ruleData"
+            :key="details.value"
+          >
+            <template #label>
+              <el-icon>
+                <Edit />
+              </el-icon>
+            </template>
             <div>
-              <el-tag
-                closable
-                effect="dark"
-                @close="ruleData?.splice(index, 1)"
-              >
-                {{ details.value }}
-              </el-tag>
-            </div>
-            <div>
-              <el-space
-                direction="horizontal"
-              >
+              <div>
                 <el-tag
                   closable
-                  v-for="(single, idx) in details.detail"
-                  :key="single"
-                  @close="details.detail.splice(idx, 1)"
+                  effect="dark"
+                  @close="ruleData?.splice(index, 1)"
                 >
-                  {{ single }}
+                  {{ details.value }}
                 </el-tag>
-                <el-input
-                  v-if="details.inputVisible"
-                  ref="InputRef"
-                  v-model="details.inputValue"
-                  class="ml-1 w-20"
-                  size="small"
-                  @keyup.enter="handleInputConfirm(details)"
-                  @blur="handleInputConfirm(details)"
-                />
-                <el-button
-                  v-else
-                  class="button-new-tag ml-1"
-                  size="small"
-                  @click="showInput(details)"
+              </div>
+              <div>
+                <el-space
+                  direction="horizontal"
                 >
-                  + New Tag
-                </el-button>
-              </el-space>
+                  <Draggable v-model="details.detail">
+                    <el-tag
+                      closable
+                      v-for="(single, idx) in details.detail"
+                      :key="single"
+                      @close="details.detail.splice(idx, 1)"
+                    >
+                      {{ single }}
+                    </el-tag>
+                  </Draggable>
+                  <el-input
+                    v-if="details.inputVisible"
+                    ref="InputRef"
+                    v-model="details.inputValue"
+                    class="ml-1 w-20"
+                    size="small"
+                    @keyup.enter="handleInputConfirm(details)"
+                    @blur="handleInputConfirm(details)"
+                  />
+                  <el-button
+                    v-else
+                    class="button-new-tag ml-1"
+                    size="small"
+                    @click="showInput(details)"
+                  >
+                    + New Tag
+                  </el-button>
+                </el-space>
+              </div>
             </div>
-          </div>
-        </el-form-item>
+          </el-form-item>
+        </Draggable>
       </el-form>
     </el-form-item>
     <el-form-item v-if="!isAdd">
