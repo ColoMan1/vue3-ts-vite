@@ -197,6 +197,7 @@ const handleAddAttr = () => {
   })
   isAdd.value = false
 }
+
 // 控制添加规格显示隐藏
 const isAdd = ref(false)
 </script>
