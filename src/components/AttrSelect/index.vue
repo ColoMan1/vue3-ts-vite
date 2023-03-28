@@ -166,6 +166,7 @@ const immediateGeneration = async () => {
   })
   emit('generateHandle', generateData.info)
 }
+
 // 动态tag
 const InputRef = ref<InstanceType<typeof ElInput>[]>([])
 
