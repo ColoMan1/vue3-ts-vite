@@ -161,6 +161,7 @@ const confrim = () => {
     item.inputVisible = false
   })
 }
+
 // 点击立即生成
 const immediateGeneration = async () => {
   const generateData = await generateAttr(0, 1, {
