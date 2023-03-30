@@ -147,9 +147,11 @@ const emit = defineEmits(['generateHandle'])
 
 // 选择规格
 const selectValue = ref<number>()
+
 // 规格数据
 type RuleValueType = { inputValue: string, inputVisible: boolean} & AttrRuleValue
 const ruleData = ref<RuleValueType[]>([])
+
 // 点击确认按钮
 const confrim = () => {
   if (typeof selectValue.value === 'undefined') return
