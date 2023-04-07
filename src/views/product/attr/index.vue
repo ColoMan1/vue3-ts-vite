@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const inputValue = ref<string>('')
 const todos = reactive<Record<string, any>[]>([])
+const textEdit = ref<number>(999999)
 const addTodos = () => {
   if (!inputValue) return false
   todos.unshift({
@@ -17,7 +18,7 @@ const checkAll = () => {
 // 删除
 const deleteItem = (data: Record<string, any>) => {
   const idx = todos.indexOf(data)
-  console.log(idx)
+  todos.splice(idx, 1)
 }
 const intermediate = ref([])
 const showAll = () => {
@@ -52,8 +53,8 @@ const showComplete = () => {}
       <label for="toggle-all">Mark all as complete</label>
       <ul class="todo-list">
         <li
-          v-for="item in todos"
-          :key="item.text"
+          v-for="(item, index) in todos"
+          :key="index"
         >
           <div
             class="view"
@@ -64,8 +65,17 @@ const showComplete = () => {}
               v-model="item.complete"
             />
             <el-input
+              v-if="textEdit === index"
+              @blur="textEdit = 99"
               v-model="item.text"
             />
+            <span
+              v-else
+              @dblclick="textEdit = index"
+            >
+              {{ item.text }}
+            </span>
+            --------
             <el-button @click="deleteItem(item)">
               删除
             </el-button>
@@ -79,13 +89,13 @@ const showComplete = () => {}
       </span>
       <ul class="filters">
         <li @click="showAll">
-          <a href="#/all">All</a>
+          <a>All</a>
         </li>
         <li @click="showActive">
-          <a href="#/active">Active</a>
+          <a>Active</a>
         </li>
         <li @click="showComplete">
-          <a href="#/completed">Completed</a>
+          <a>Completed</a>
         </li>
       </ul>
       <button class="clear-completed">
