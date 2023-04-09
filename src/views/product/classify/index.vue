@@ -1,10 +1,15 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
+import { showToast } from './toast'
 
+const showSomething = () => {
+  showToast(12000, '这是测试函数调用方式创建组件', true)
+}
 </script>
 
 <template>
-  <div>这是商品分类</div>
+  <div @click="showSomething">
+    这是app.vue页面
+  </div>
 </template>
 
 <style scoped>
