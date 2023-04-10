@@ -1,8 +1,18 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 const vLazy = {
-  mounted (el, binding, vnode, prevVnode) {
-    console.log(el)
+  mounted (el) {
+    const src = el.src
+    el.src = ''
+    const observe = new IntersectionObserver(([{ isIntersecting }]) => {
+      // 当绑定元素进入可视区域后isIntersecting则为true
+      if (isIntersecting) {
+        console.log(222222)
+        el.src = src
+        observe.disconnect()
+      }
+    })
+    observe.observe(el)
   }
 }
 </script>
@@ -35,10 +45,12 @@ const vLazy = {
     alt=""
   >
   <img
+    v-lazy
     src="@/assets/2.jpg"
     alt=""
   >
   <img
+    v-lazy
     src="@/assets/3.jpg"
     alt=""
   >
