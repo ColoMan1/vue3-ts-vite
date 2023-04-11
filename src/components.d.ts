@@ -46,6 +46,7 @@ declare module '@vue/runtime-core' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElTag: typeof import('element-plus/es')['ElTag']
     PageContainer: typeof import('./components/PageContainer/index.vue')['default']
     Pagination: typeof import('./components/Pagination/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
