@@ -22,7 +22,6 @@ export default (options: Options) => {
     }
     return obj
   })
-
   const ws = xlsx.utils.json_to_sheet(data2)
   // 把工作表放到工作簿中
   xlsx.utils.book_append_sheet(wb, ws)
