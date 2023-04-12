@@ -115,6 +115,8 @@ const formData = ref<ICreateAdmin>({
   real_name: '',
   status: 0
 })
+const aaaa = ref(props.adminId)
+console.log(aaaa)
 const formRules = {
   account: [
     { required: true, message: '请输入管理员账号', trigger: 'blur' }
