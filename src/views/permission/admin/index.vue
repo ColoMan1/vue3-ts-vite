@@ -148,6 +148,7 @@
   <admin-dialog
     v-model="formVisible"
     v-model:admin-id="adminId"
+    :default-attrbute="{name: 32}"
     @success="submitSuccess"
   />
 </template>

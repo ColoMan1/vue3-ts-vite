@@ -91,8 +91,16 @@ const props = defineProps({
   adminId: { // 编辑的管理员id
     type: Number as PropType<number | null>,
     default: null
+  },
+  defaultAttrbute: {
+    type: Object,
+    default (re: any) {
+      console.log(re)
+    }
   }
 })
+const aaaa = ref(props.adminId)
+console.log(aaaa)
 interface IEmit {
   (e: 'update:admin-id', val: number | null): void
   (e: 'success'): void
@@ -115,8 +123,7 @@ const formData = ref<ICreateAdmin>({
   real_name: '',
   status: 0
 })
-const aaaa = ref(props.adminId)
-console.log(aaaa)
+
 const formRules = {
   account: [
     { required: true, message: '请输入管理员账号', trigger: 'blur' }
