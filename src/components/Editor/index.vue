@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
-import { onBeforeUnmount, ref, shallowRef } from 'vue'
+import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IDomEditor, IEditorConfig } from '@wangeditor/editor'
 
@@ -60,6 +60,10 @@ const stopHandle = watch(() => props.editorValue, (newV, oldV) => {
   console.log(newV, oldV)
   valueHtml.value = newV
   stopHandle()
+})
+
+onMounted(() => {
+  console.log('onmounted----------children')
 })
 </script>
 

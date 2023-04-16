@@ -165,6 +165,7 @@
         >
           <Editor
             v-model:editorValue="product.description"
+            v-if="editorShow"
           />
         </el-form-item>
         <el-form-item
@@ -296,6 +297,7 @@
         <el-form-item>
           <el-button
             type="primary"
+            @click="primary"
           >
             保存
           </el-button>
@@ -308,15 +310,22 @@
 <script lang="ts" setup>
 import { onMounted, ref, computed } from 'vue'
 import type { ProductAttr, ProductCategory, AttrRuleValue, AttrTableHeader, ProductAttrTpl } from '@/api/types/product'
-import Editor from '@/components/Editor/index.vue'
+// import Editor from '@/components/Editor/index.vue'
 import { getAttrs } from '../../../api/product'
-
+// const Editor = defineAsyncComponent(() => {
+//   return import('@/components/Editor/index.vue')
+// })
 const activities = ref([
   { type: 'danger', name: '秒杀' },
   { type: 'info', name: '默认' },
   { type: 'warning', name: '砍价' },
   { type: 'success', name: '拼团' }
 ])
+const primary = () => {
+  import('@/components/Editor/index.vue')
+  editorShow.value = true
+}
+const editorShow = ref(false)
 // 规格模板
 const attrModelVariable = ref<ProductAttrTpl[]>([])
 // 商品分类
@@ -443,6 +452,7 @@ const emptyBatchSetting = () => {
   batchSetting.value = JSON.parse(JSON.stringify(defaultBatchSetting))
 }
 onMounted(() => {
+  console.log('onmounted----------parent')
   attrModel().then(res => {
     attrModelVariable.value = res
   })

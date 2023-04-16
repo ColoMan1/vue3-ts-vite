@@ -116,6 +116,7 @@ const handleSubmit = async () => {
     token: data.token
   })
   let redirect = route.query.redirect || '/'
+  console.log(redirect)
   if (typeof redirect !== 'string') {
     redirect = '/'
   }
